@@ -1,0 +1,678 @@
+
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Astarexz
+ */
+public class Customer extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Customer
+     */
+    Connection conn;
+    ResultSet rs;
+    PreparedStatement pst;
+    String ImgPath=null;
+    public Customer() {
+        initComponents();
+    }
+    private int id;
+    private String name;
+    private String email;
+    private int mob; 
+    private byte[] picture;
+    
+    public Customer(int cid, String cname, int cmob, String cemail, byte[] cimg)
+    {
+        this.id = cid;
+        this.name = cname;
+        this.email = cemail;
+        this.mob = cmob;
+        this.picture = cimg;
+    }
+     public int getId()
+    {
+        return id;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public String getEmail()
+    {
+        return email;
+    }
+    
+    public int getMob()
+    {
+        return  mob;
+    }
+    
+    public byte[] getImage()
+    {
+        return picture;
+    }
+    
+        public ImageIcon ResizeImage(String imagePath, byte[] pic)
+    {
+        ImageIcon myImage = null;
+        
+        if(imagePath != null)
+        {
+            myImage = new ImageIcon(imagePath);
+        }else{
+            myImage = new ImageIcon(pic);
+        }
+        
+        Image img = myImage.getImage();
+        Image img2 = img.getScaledInstance(lbl_image.getWidth(), lbl_image.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(img2);
+        return image;
+        
+    }
+         public boolean checkInputs()
+    {
+        if(
+              jTextField1.getText() == null
+           || jTextField2.getText() == null
+           || jTextField3.getText() == null
+           || jTextField4.getText() == null
+           || jTextField5.getText() == null
+          ){
+            return false;
+        }
+        else{
+            try{
+                Float.parseFloat(jTextField4.getText());
+                return true;
+            }catch(Exception ex)
+            {
+                return false;
+            }
+        }
+    }
+         public ArrayList<Customer> getCustomerList()
+    {
+            ArrayList<Customer> customerList  = new ArrayList<Customer>();
+            conn=javaconnect.ConnecrDb();
+            String query = "SELECT * FROM Customers";
+            
+            Statement st;
+            ResultSet rs;
+            
+        try {
+            
+            st = conn.createStatement();
+            rs = st.executeQuery(query);
+            Customer customer;
+            
+            while(rs.next())
+            {
+                customer = new Customer(rs.getInt("Cust_Id"),rs.getString("Cust_Name"),rs.getInt("Mob_No"),rs.getString("Email_Id"),rs.getBytes("Cust_Img"));
+                customerList.add(customer);
+            }
+            
+        } catch (SQLException ex) {
+        }
+        
+        return customerList; 
+                
+    }
+             // 2-POPULATE JTABLE
+      public void Show_Customers_In_JTable()
+    {
+        ArrayList<Customer> list = getCustomerList();
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        // clear jtable content
+        model.setRowCount(0);
+        Object[] row = new Object[4];
+        for(int i = 0; i < list.size(); i++)
+        {
+            row[0] = list.get(i).getName();
+            row[1] = list.get(i).getId();
+            row[2] = list.get(i).getEmail();
+            row[3] = list.get(i).getMob();
+            
+            model.addRow(row);
+        }
+    
+    }
+           public void ShowItem(int index)
+    {
+            jTextField1.setText(Integer.toString(getCustomerList().get(index).getId()));
+            jTextField2.setText(getCustomerList().get(index).getName());
+            jTextField3.setText(getCustomerList().get(index).getEmail());
+            jTextField4.setText(Integer.toString(getCustomerList().get(index).getMob()));
+            lbl_image.setIcon(ResizeImage(null, getCustomerList().get(index).getImage()));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        lbl_image = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        Btn_Insert = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField7 = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("Customer Name");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setText("Email Id");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setText("Mobile No.");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel5.setText("Address");
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setText("Customer Id");
+
+        jLabel6.setFont(new java.awt.Font("Comic Sans MS", 3, 48)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel6.setText("Customers...");
+
+        lbl_image.setBackground(new java.awt.Color(204, 255, 255));
+        lbl_image.setOpaque(true);
+
+        jButton1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jButton1.setText("Choose Image");
+        jButton1.setToolTipText("");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        Btn_Insert.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        Btn_Insert.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\1000px-Fairytale_button_add.svg.png")); // NOI18N
+        Btn_Insert.setText("Insert");
+        Btn_Insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_InsertActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\Untitled-22-512.png")); // NOI18N
+        jButton3.setText("Update");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\Cancel.png")); // NOI18N
+        jButton4.setText("Delete");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cust..Name", "Cust..Id", "Email Id", "Mobile No."
+            }
+        ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setText("Product_ID");
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel8.setText("SALE_ID");
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\Apps-Dialog-Logout-icon.png")); // NOI18N
+        jMenuItem1.setText("Log Out");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\128189-simple-red-square-icon-alphanumeric-letter-x.png")); // NOI18N
+        jMenuItem2.setText("Exit");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Astarexz\\Downloads\\Shopproicon\\back.png")); // NOI18N
+        jMenuItem3.setText("Back");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField5)
+                            .addComponent(jTextField6)
+                            .addComponent(jTextField7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_image, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(70, 70, 70))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(173, Short.MAX_VALUE)
+                        .addComponent(Btn_Insert)
+                        .addGap(72, 72, 72)
+                        .addComponent(jButton3)
+                        .addGap(72, 72, 72)
+                        .addComponent(jButton4)
+                        .addGap(96, 96, 96)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_image, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Btn_Insert)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addGap(115, 115, 115))
+        );
+
+        setSize(new java.awt.Dimension(1336, 666));
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+           JFileChooser file = new JFileChooser();
+        file.setCurrentDirectory(new File(System.getProperty("user.home")));
+       
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.images", "jpg","png");
+        file.addChoosableFileFilter(filter);
+        int result = file.showSaveDialog(null);
+        if(result == JFileChooser.APPROVE_OPTION)
+        {
+            File selectedFile = file.getSelectedFile();
+            String path = selectedFile.getAbsolutePath();
+            lbl_image.setIcon(ResizeImage(path, null));
+            ImgPath = path;
+        }
+        else{
+            System.out.println("No File Selected");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void Btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_InsertActionPerformed
+        // TODO add your handling code here:
+         if(checkInputs() && ImgPath != null)
+        {
+            try {
+                 conn=javaconnect.ConnecrDb();
+                PreparedStatement ps = conn.prepareStatement("INSERT INTO Customers(Cust_Id,Cust_Name,Email_Id,Mob_No,Address,Cust_Img,Pro_Id,Sale_Id)"
+                        + "values(?,?,?,?,?,?,?,?) ");
+                ps.setString(1, jTextField1.getText());
+                ps.setString(2, jTextField2.getText());
+                ps.setString(3, jTextField3.getText());
+                ps.setString(4, jTextField4.getText());
+                ps.setString(5,jTextField5.getText());
+                ps.setString(7,jTextField6.getText());
+                ps.setString(8,jTextField7.getText());
+                InputStream img = new FileInputStream(new File(ImgPath));
+                ps.setBlob(6, img);
+                ps.executeUpdate();
+                Show_Customers_In_JTable();
+                JOptionPane.showMessageDialog(null, "Data Inserted");
+            } catch (Exception ex) {
+                 JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "One Or More Field Are Empty");
+        }
+       
+        // only for test
+        System.out.println("Customer Name => "+jTextField2.getText());
+        System.out.println("Mobile Number => "+jTextField4.getText());
+        System.out.println("Image => "+ImgPath);
+        
+    }//GEN-LAST:event_Btn_InsertActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if(checkInputs() && jTextField1.getText() != null)
+        {
+            String UpdateQuery = null;
+            PreparedStatement ps = null;
+            conn=javaconnect.ConnecrDb();
+           
+            // update without image
+            if(ImgPath == null)
+            {
+                try{
+                    UpdateQuery = "UPDATE Customers SET Cust_Name = ?, Email_Id = ?"
+                            + ", Mob_No = ?, Address = ?, Pro_Id= ?,Sale_Id= ? WHERE Cust_Id = ?";
+                    ps = conn.prepareStatement(UpdateQuery);
+                   
+                    ps.setString(1, jTextField2.getText());
+                    ps.setString(2, jTextField3.getText());
+                    ps.setString(3, jTextField4.getText());
+                    ps.setString(4, jTextField5.getText());
+                    ps.setInt(5, Integer.parseInt(jTextField1.getText()));
+                    ps.setString(6, jTextField6.getText());
+                    ps.setString(7, jTextField7.getText());
+                    
+                   
+                    ps.executeUpdate();
+                    Show_Customers_In_JTable();
+                    JOptionPane.showMessageDialog(null, "Customers Updated");
+                   
+                }catch(Exception e)
+                {}
+            }
+            // update With Image
+            else{
+                try{
+                InputStream img = new FileInputStream(new File(ImgPath));
+               
+                 UpdateQuery = "UPDATE Customers SET Cust_Name = ?, Email_Id = ?"
+                            + ", Mob_No = ?, Address = ?,Cust_Img=?,Pro_Id=?,Sale_Id=? WHERE Cust_Id = ?";
+               
+                  ps = conn.prepareStatement(UpdateQuery);
+                   
+                    ps.setString(1, jTextField2.getText());
+                    ps.setString(2, jTextField3.getText());
+                    ps.setString(3, jTextField4.getText());
+                    ps.setString(4, jTextField5.getText());
+                  
+                   
+                    
+                   
+                    ps.setBlob(5, img);
+                   
+                    ps.setInt(6, Integer.parseInt(jTextField1.getText()));
+                    ps.setString(7, jTextField6.getText());
+                    ps.setString(8, jTextField7.getText());
+                   
+                    ps.executeUpdate();
+                    Show_Customers_In_JTable();
+                    JOptionPane.showMessageDialog(null, "Customers Updated");
+               
+                }catch(Exception ex)
+                {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "One Or More Fields Are Empty Or Wrong");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+         if(!jTextField1.getText().equals(""))
+        {
+            try {
+                conn=javaconnect.ConnecrDb();
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM Customers WHERE Cust_Id = ?");
+                int id = Integer.parseInt(jTextField1.getText());
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                Show_Customers_In_JTable();
+                JOptionPane.showMessageDialog(null, "Customers Deleted");
+            } catch (SQLException ex) {
+                
+            }
+         
+        }else{
+            JOptionPane.showMessageDialog(null, "Customer Not Deleted : No Id To Delete");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int index = jTable1.getSelectedRow();
+        ShowItem(index);
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        setVisible(false);
+        Login ob=new Login();
+        ob.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        setVisible(false);
+        Inventory ob=new Inventory();
+        ob.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Customer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Customer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Customer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Customer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Customer().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Btn_Insert;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel lbl_image;
+    // End of variables declaration//GEN-END:variables
+}
